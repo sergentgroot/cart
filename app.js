@@ -28,7 +28,7 @@ closeCart.addEventListener('click', () => {
                 newProduct.innerHTML = 
                 `<img src="${product.image}" alt="">
                 <h2>${product.name}</h2>
-                <div class="price">$${product.price}</div>
+                <div class="price">${product.price}</div>
                 <button class="addCart">Add To Cart</button>`;
                 listProductHTML.appendChild(newProduct);
             });
@@ -65,6 +65,8 @@ const addCartToMemory = () => {
 const addCartToHTML = () => {
     listCartHTML.innerHTML = '';
     let totalQuantity = 0;
+    let totalPrice = 0; // Nouvelle ligne pour stocker le prix total
+
     if(cart.length > 0){
         cart.forEach(item => {
             totalQuantity = totalQuantity +  item.quantity;
@@ -89,9 +91,14 @@ const addCartToHTML = () => {
                     <span class="plus">></span>
                 </div>
             `;
-        })
+
+            totalPrice += info.price * item.quantity; // Ajoute le prix du produit au prix total
+        });
     }
+
     iconCartSpan.innerText = totalQuantity;
+    // Affiche le prix total dans le panier
+    document.querySelector('.total-price').innerText = `$${totalPrice}`;
 }
 
 listCartHTML.addEventListener('click', (event) => {
@@ -142,5 +149,17 @@ const initApp = () => {
             addCartToHTML();
         }
     })
+}
+
+const calculateTotalPrice = () => {
+    let totalPrice = 0;
+
+    cart.forEach(item => {
+        let positionProduct = products.findIndex((value) => value.id == item.product_id);
+        let product = products[positionProduct];
+        totalPrice += product.price * item.quantity;
+    });
+
+    return totalPrice;
 }
 initApp();
